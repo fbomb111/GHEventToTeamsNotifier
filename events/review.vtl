@@ -1,0 +1,31 @@
+##https://developer.github.com/v3/activity/events/types/#pullrequestreviewevent
+
+#set($inputRoot = $input.path('$'))
+#if(($inputRoot.review.user.login != "") && ($inputRoot.review.state == "approved"))
+{
+  "@type" : "MessageCard",
+  "@context" : "https://schema.org/extensions",
+  "summary": "User approved a PR",
+  "themeColor" : "0078D7",
+  "title" : "$inputRoot.review.user.login approved a pull request.",
+  "sections" : [
+    {
+        "activityTitle" : "Title: $inputRoot.pull_request.title",
+        "activitySubtitle" : "Repository: $inputRoot.pull_request.head.repo.full_name",
+        "activityImage" : "$inputRoot.review.user.avatar_url"
+    }
+],
+  "potentialAction" : [
+    {
+      "@type" : "OpenUri",
+      "name" : "View in GitHub",
+      "targets" : [
+                {
+                    "os" : "default",
+                    "uri" : "$inputRoot.pull_request.html_url"
+                }
+            ]
+        } 
+    ]
+}
+#end

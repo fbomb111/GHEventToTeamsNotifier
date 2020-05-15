@@ -1,0 +1,31 @@
+##https://developer.github.com/v3/activity/events/types/#pullrequestevent
+
+#set($inputRoot = $input.path('$'))
+#if(($inputRoot.pull_request.user.login != "") && ($inputRoot.action == "opened"))
+{
+  "@type" : "MessageCard",
+  "@context" : "https://schema.org/extensions",
+  "summary": "User opened a PR",
+  "themeColor" : "0078D7",
+  "title" : "$inputRoot.pull_request.user.login $inputRoot.action a pull request.",
+  "sections" : [
+    {
+        "activityTitle" : "Title: $inputRoot.pull_request.title",
+        "activitySubtitle" : "Repository: $inputRoot.pull_request.head.repo.full_name",
+        "activityImage" : "$inputRoot.pull_request.user.avatar_url"
+    }
+],
+  "potentialAction" : [
+    {
+      "@type" : "OpenUri",
+      "name" : "View in GitHub",
+      "targets" : [
+                {
+                    "os" : "default",
+                    "uri" : "$inputRoot.pull_request.html_url"
+                }
+            ]
+        } 
+    ]
+}
+#end

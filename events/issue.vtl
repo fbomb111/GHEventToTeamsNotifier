@@ -1,0 +1,41 @@
+##https://developer.github.com/v3/activity/events/types/#issuesevent
+
+#set($inputRoot = $input.path('$'))
+#if(($inputRoot.issue.assignee.login != "") && ($inputRoot.action == "closed"))
+{
+	"@type": "MessageCard",
+	"@context": "https://schema.org/extensions",
+	"summary": "Issue 176715375",
+	"themeColor": "0078D7",
+	"title": "Issue closed: $inputRoot.issue.title",
+	"sections": [
+		{
+			"activityTitle": "$inputRoot.issue.assignee.login",
+			"activitySubtitle": "$inputRoot.issue.closed_at",
+			"activityImage": "$inputRoot.issue.assignee.avatar_url",
+			"facts": [
+				{
+					"name": "Repository:",
+					"value": "$inputRoot.repository.name"
+				},
+				{
+					"name": "Issue #:",
+					"value": "$inputRoot.issue.number"
+				}
+			]
+		}
+	],
+	"potentialAction": [
+		{
+			"@type": "OpenUri",
+			"name": "View in GitHub",
+			"targets": [
+				{
+					"os": "default",
+					"uri": "$inputRoot.issue.html_url"
+				}
+			]
+		}
+	]
+}
+#end
